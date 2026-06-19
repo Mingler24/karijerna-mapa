@@ -3573,31 +3573,103 @@ function StepLocations({ career }) {
 
 // Known Serbian employer → domain mapping for Clearbit logos
 const KNOWN_LOGOS = {
+  // IT / Software
   'Endava': 'endava.com', 'EPAM': 'epam.com', 'Microsoft DC': 'microsoft.com',
   'Nordeus': 'nordeus.com', 'Wargaming': 'wargaming.com', 'Levi9': 'levi9.com',
   'Vega IT': 'vegait.rs', 'NCR': 'ncr.com', 'HTEC': 'htecgroup.com',
   'Devtech': 'devtechgroup.com', 'Holycode': 'holycode.com',
-  'KCS Beograd': 'kcs.ac.rs', 'KCV Novi Sad': 'kcv.rs', 'Bel Medic': 'belmedic.com',
-  'MediGroup': 'medigroup.rs', 'Euromedik': 'euromedik.rs',
-  'Klinika Re-Med': 'remed.rs',
+  
+  // Health
+  'KCS Beograd': 'kcs.ac.rs', 'KCS': 'kcs.ac.rs', 'KCV Novi Sad': 'kcv.rs',
+  'Bel Medic': 'belmedic.com', 'MediGroup': 'medigroup.rs', 'Euromedik': 'euromedik.rs',
+  'Klinika Re-Med': 'remed.rs', 'Institut za javno zdravlje': 'batut.org.rs',
+  
+  // Big 4 / Consulting
   'Deloitte': 'deloitte.com', 'PwC': 'pwc.com', 'EY': 'ey.com', 'KPMG': 'kpmg.com',
   'TPA': 'tpa-group.com', 'Mazars': 'mazars.rs',
+  
+  // Retail / FMCG
   'Delhaize Srbija': 'delhaize.com', 'Mercator-S': 'mercator-s.rs',
   'Coca-Cola HBC': 'coca-colahellenic.com', 'Carlsberg': 'carlsbergsrbija.rs',
-  'Atlantic Grupa': 'atlanticgrupa.com', 'Telekom Srbija': 'mts.rs', 'A1 Srbija': 'a1.rs',
+  'Atlantic Grupa': 'atlanticgrupa.com', 'IDEA': 'idea.rs', 'Lidl': 'lidl.rs',
+  'Pepsi': 'pepsico.com',
+  
+  // Telco
+  'Telekom Srbija': 'mts.rs', 'A1 Srbija': 'a1.rs',
+  
+  // Logistics
   'DHL Srbija': 'dhl.com', 'FedEx': 'fedex.com', 'Maersk': 'maersk.com',
   'Milšped': 'milsped.com', 'Schenker': 'dbschenker.com', 'Kuehne+Nagel': 'kuehne-nagel.com',
-  'MD International': 'mdinternational.rs',
+  'MD International': 'mdinternational.rs', 'GLS': 'gls-serbia.com',
+  'D Express': 'dexpress.rs', 'Bex': 'bex.rs', 'Pošta Srbije': 'posta.rs',
+  'Železnice Srbije': 'srbcargo.rs', 'Lagermax': 'lagermax.com',
+  
+  // Industry / Manufacturing
   'FCA Srbija (Kragujevac)': 'stellantis.com', 'MIN Niš': 'mininfo.rs',
   'Yura Corporation': 'yura.co.kr', 'Continental': 'continental.com', 'Bosch': 'bosch.com',
-  'Tigar Tyres': 'tigartyres.com',
+  'Tigar Tyres': 'tigartyres.com', 'Tigar': 'tigar.com', 'Simpo': 'simpo.rs',
+  'NIS': 'nis.eu', 'EPS': 'eps.rs', 'Energoprojekt': 'energoprojekt.rs',
+  'Schneider Electric': 'schneider-electric.com', 'Siemens': 'siemens.com',
+  'ABB': 'abb.com', 'Strabag': 'strabag.com', 'Delta Holding': 'deltaholding.com',
+  'Mašinoprojekt': 'masinoprojekt.rs', 'Brodogradilište Apatin': 'brodogradiliste-apatin.rs',
+  'Forma Ideale': 'forma-ideale.rs',
+  
+  // Auto retail
   'Star Import (BMW)': 'bmw.com', 'Toyota Beograd': 'toyota.rs', 'Hyundai Auto Beograd': 'hyundai.rs',
+  'Astra': 'astra.rs',
+  
+  // Pharma
+  'Hemofarm': 'hemofarm.com', 'Galenika': 'galenika.rs', 'Apoteke Galenika': 'galenika.rs',
+  'Phoenix Pharma': 'phoenixgroup.rs', 'Eko Apoteka': 'ekoapoteka.rs',
+  
+  // Banking
+  'Banca Intesa': 'bancaintesa.rs', 'OTP Banka': 'otpbanka.rs',
+  'Erste Bank': 'erstebank.rs', 'NLB Komercijalna banka': 'nlbkomb.rs',
+  'UniCredit Bank': 'unicreditbank.rs', 'Raiffeisen': 'raiffeisenbank.rs',
+  
+  // Marketing / Creative agencies
   'McCann': 'mccann.com', 'Communis': 'communis.rs', 'Saatchi & Saatchi': 'saatchi.com',
+  'Direct Media': 'directmedia.rs',
+  
+  // NGO / Social
   'Crveni krst Srbije': 'redcross.org.rs', 'Caritas Srbija': 'caritas.rs',
-  'SOS Dečija sela': 'sos-decijasela.rs', 'KCB': 'kcbeograd.rs', 'SKC': 'skc.org.rs',
-  'MSU': 'msub.org.rs', 'Bitef': 'bitef.rs',
-  'Square Nine': 'squarenine.rs', 'Crowne Plaza': 'crowneplaza.com', 'Hyatt Regency': 'hyatt.com',
+  'SOS Dečija sela': 'sos-decijasela.rs',
+  
+  // Culture
+  'KCB': 'kcbeograd.rs', 'SKC': 'skc.org.rs', 'MSU': 'msub.org.rs', 'Bitef': 'bitef.rs',
+  'Muzej istorije Jugoslavije': 'muzej-jugoslavije.org',
+  'Kulturni centar Novi Sad': 'kcns.org.rs',
+  
+  // Hospitality
+  'Square Nine': 'squarenine.rs', 'Crowne Plaza': 'crowneplaza.com',
+  'Hyatt Regency': 'hyatt.com', 'Marriott': 'marriott.com', 'Hilton': 'hilton.com',
+  'IH Beograd': 'ihbeograd.com', 'Mladost Hoteli': 'mladosthoteli.rs',
+  
+  // Beauty / Personal
   'Toni & Guy Srbija': 'toniandguy.com',
+  
+  // Legal
+  'BDK Advokati': 'bdkadvokati.com', 'Karanović Partners': 'karanovicpartners.com',
+  'JPM': 'jpm.law', 'Schoenherr': 'schoenherr.eu',
+  
+  // Education
+  'Singidunum': 'singidunum.ac.rs', 'Megatrend': 'megatrend.edu.rs',
+  'EDUCONS': 'educons.edu.rs', 'BU': 'bg.ac.rs', 'UNS': 'uns.ac.rs',
+  
+  // Media
+  'RTS': 'rts.rs', 'N1': 'n1info.rs', 'Insajder': 'insajder.net',
+  'Politika': 'politika.rs', 'Blic': 'blic.rs', 'Danas': 'danas.rs',
+  'Nova S': 'nova.rs',
+  
+  // Government / Public
+  'MUP Srbije': 'mup.gov.rs', 'MUP Srbije — SVS': 'mup.gov.rs',
+  'Beogradski vodovod': 'bvk.rs', 'JKP "Vodovod"': 'bvk.rs',
+  
+  // Security
+  'G4S': 'g4s.com', 'Securitas Srbija': 'securitas.com',
+  
+  // Fashion / Lifestyle
+  'Diesel': 'diesel.com',
 };
 
 function EmployerLogo({ name }) {
