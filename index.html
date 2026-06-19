@@ -3579,7 +3579,7 @@ function StepLocations({ career }) {
   );
 }
 
-// Known Serbian employer → domain mapping for Clearbit logos
+// Known Serbian employer → domain mapping for Google Favicon API
 const KNOWN_LOGOS = {
   // IT / Software
   'Endava': 'endava.com', 'EPAM': 'epam.com', 'Microsoft DC': 'microsoft.com',
@@ -3683,7 +3683,7 @@ const KNOWN_LOGOS = {
 function EmployerLogo({ name }) {
   const [imgError, setImgError] = useState(false);
   const domain = KNOWN_LOGOS[name];
-  const logoUrl = domain ? 'https://logo.clearbit.com/' + domain + '?size=80' : null;
+  const logoUrl = domain ? 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=128' : null;
 
   // Generate consistent color from name hash
   const hash = name.split('').reduce((a, c) => ((a * 31) + c.charCodeAt(0)) | 0, 0);
