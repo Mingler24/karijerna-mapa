@@ -95,7 +95,10 @@
       // Phase 1: Babel transform (compile JSX → JS)
       var compiled;
       try {
-        compiled = Babel.transform(source, { presets: ['react'], filename: 'app.jsx' }).code;
+        compiled = Babel.transform(source, { 
+          presets: [['react', { runtime: 'classic' }]], 
+          filename: 'app.jsx' 
+        }).code;
       } catch (e) {
         showErrorFallback(
           'Babel transform greška: ' + (e.message || String(e)) + 
@@ -2014,7 +2017,7 @@ function Landing({ onStart, onUpload, onDemo, savedState, onResume, onClearSaved
             <Icon name="upload" size={18} />
           </div>
           <div className="label mb-2">02 · imaš izveštaje</div>
-          <h3 className="text-xl font-medium mb-2">Otpremi rezultate</h3>
+          <h3 className="text-xl font-medium mb-2">Dodaj rezultate</h3>
           <p className="text-sm text-ink-2 leading-relaxed mb-6">Već si radio/la IdentyFi i WayFi? Unesi vrednosti iz PDF-a.</p>
           <div className="btn btn-secondary">
             Unesi rezultate <Icon name="arrow" size={14} />
@@ -2218,7 +2221,8 @@ function ManualEntry({ onComplete, onBack }) {
   const [interests, setInterests] = useState(() => {
     const init = {}; INTEREST_AREAS.forEach(a => { init[a.id] = 30; }); return init;
   });
-  const [fileName, setFileName] = useState(null);
+  const [wayfiFile, setWayfiFile] = useState(null);
+  const [identyfiFile, setIdentyfiFile] = useState(null);
 
   return (
     <div className="max-w-4xl mx-auto px-6 md:px-12 pt-8 pb-24 animate-in">
@@ -2229,23 +2233,41 @@ function ManualEntry({ onComplete, onBack }) {
       <div className="label mb-3">Imam izveštaje</div>
       <h2 className="text-3xl md:text-4xl font-medium mb-2" style={{letterSpacing: '-0.025em'}}>Unesi vrednosti iz izveštaja.</h2>
       <p className="text-base text-ink-2 mb-10 max-w-2xl">
-        Otpremi PDF izveštaje (za vizuelnu referencu) ili unesi vrednosti ručno. Za IdentyFi koristi Stanine skalu (1–9). Za WayFi unesi procenat poklapanja po oblasti.
+        Dodaj PDF izveštaje (za vizuelnu referencu) ili unesi vrednosti ručno. Za IdentyFi koristi Stanine skalu (1–9). Za WayFi unesi procenat poklapanja po oblasti.
       </p>
 
       <div className="surface p-6 mb-6">
+        <div className="label mb-4">PDF izveštaji</div>
+
+        <div className="flex items-center justify-between gap-4 flex-wrap pb-4 mb-4" style={{borderBottom: '1px solid var(--border)'}}>
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background: 'var(--surface-2)'}}>
+              <Icon name="upload" size={18} />
+            </div>
+            <div>
+              <div className="text-sm font-medium">WayFi · interesovanja</div>
+              <p className="text-sm text-ink-2">{wayfiFile ? 'Dodato: ' + wayfiFile : 'Tvoj WayFi PDF izveštaj (opciono).'}</p>
+            </div>
+          </div>
+          <label className="btn btn-secondary cursor-pointer">
+            <Icon name="upload" size={14} /> Dodaj WayFi PDF
+            <input type="file" accept="application/pdf" style={{display: 'none'}} onChange={e => setWayfiFile(e.target.files?.[0]?.name || null)} />
+          </label>
+        </div>
+
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background: 'var(--surface-2)'}}>
               <Icon name="upload" size={18} />
             </div>
             <div>
-              <div className="label">PDF izveštaji</div>
-              <p className="text-sm text-ink-2">{fileName ? 'Otpremljeno: ' + fileName : 'IdentyFi i WayFi PDF (opciono).'}</p>
+              <div className="text-sm font-medium">IdentyFi · ličnost</div>
+              <p className="text-sm text-ink-2">{identyfiFile ? 'Dodato: ' + identyfiFile : 'Tvoj IdentyFi PDF izveštaj (opciono).'}</p>
             </div>
           </div>
           <label className="btn btn-secondary cursor-pointer">
-            <Icon name="upload" size={14} /> Otpremi PDF
-            <input type="file" accept="application/pdf" multiple style={{display: 'none'}} onChange={e => setFileName(Array.from(e.target.files || []).map(f => f.name).join(', '))} />
+            <Icon name="upload" size={14} /> Dodaj IdentyFi PDF
+            <input type="file" accept="application/pdf" style={{display: 'none'}} onChange={e => setIdentyfiFile(e.target.files?.[0]?.name || null)} />
           </label>
         </div>
       </div>
@@ -4097,15 +4119,16 @@ function ResultsDashboard({ personality, interests, onRestart, onReplayJourney }
 // === APP =========================================================
 // ================================================================
 
+// Ana je kreativna — Tvorac arhetip. Vodi ka dizajnu, kulturi, vizuelnim profesijama.
 const DEMO_PERSONALITY = {
-  savesnost: 5, volja: 6, emotivna: 2, kontakti: 7, timski: 6, istrajnost: 2,
+  savesnost: 6, volja: 8, emotivna: 5, kontakti: 6, timski: 5, istrajnost: 6,
 };
 
 const DEMO_INTERESTS = {
-  vozila: 10, metal: 15, ishrana: 25, hemija: 30, elektro: 10, priroda: 60,
-  gradj_tehnika: 15, gradjevina: 10, drvo: 30, planiranje: 25, tekstil: 50,
-  stampa: 35, logistika: 20, ugostiteljstvo: 45, informatika: 30, dizajn: 65,
-  zdravlje: 90, kultura: 80, prodaja: 40, sport: 35, obrazovanje: 95, ekonomija: 20,
+  vozila: 15, metal: 10, ishrana: 20, hemija: 25, elektro: 15, priroda: 35,
+  gradj_tehnika: 10, gradjevina: 10, drvo: 30, planiranje: 35, tekstil: 55,
+  stampa: 65, logistika: 15, ugostiteljstvo: 30, informatika: 55, dizajn: 92,
+  zdravlje: 20, kultura: 85, prodaja: 35, sport: 25, obrazovanje: 30, ekonomija: 20,
 };
 
 const STORAGE_KEY = 'karijerna-mapa-state-v2';
