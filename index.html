@@ -3045,7 +3045,7 @@ const CAREER_PHOTOS = {
   'masinski-inzenjer': '1565793298595-6a879b1d9492',
   'kuvar':             '1556910103-1c02745aae4d',
   'ucitelj':           '1503676260728-1c00da094a0b',
-  'graficki-dizajner': '1561070791-2526d30994b8',
+  'graficki-dizajner': '1561070791-2526d30994b5',
   'automehanicar':     '1486754735734-325b5831c3ad',
   'racunovodja':       '1554224155-6726b3ff858f',
   'prodavac':          '1556761175-4b46a572b786',
@@ -3061,7 +3061,9 @@ function careerPhotoUrl(careerId) {
 }
 
 // Full-bleed step wrapper — sat. color or photo bg, generous padding
-function StepFullBleed({ bg, photo, dark, children, narrow, photoOpacity = 0.55 }) {
+function StepFullBleed({ bg, photo, dark, children, narrow, photoOpacity = 0.40, photoBlur = 6, overlayLight = false }) {
+  // Dark overlay for dark backgrounds (default), light overlay for light backgrounds
+  const overlayBase = overlayLight ? '244,232,208' : '14,14,12'; // cream-tinted or near-black
   return (
     <div className="min-h-screen flex items-center justify-center px-6 md:px-12 relative animate-in"
          style={{
@@ -3069,13 +3071,16 @@ function StepFullBleed({ bg, photo, dark, children, narrow, photoOpacity = 0.55 
            paddingTop: '96px',
            paddingBottom: '96px',
            color: dark ? 'white' : 'var(--ink)',
+           overflow: 'hidden',
          }}>
       {photo && (
         <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'linear-gradient(to bottom, rgba(14,14,12,' + (photoOpacity - 0.1) + '), rgba(14,14,12,' + (photoOpacity + 0.25) + ')), url(' + photo + ')',
+          position: 'absolute',
+          top: '-24px', right: '-24px', bottom: '-24px', left: '-24px',
+          backgroundImage: 'linear-gradient(to bottom, rgba(' + overlayBase + ',' + (photoOpacity - 0.1) + '), rgba(' + overlayBase + ',' + (photoOpacity + 0.25) + ')), url(' + photo + ')',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          filter: 'blur(' + photoBlur + 'px)',
           pointerEvents: 'none',
         }}></div>
       )}
@@ -3185,8 +3190,9 @@ function StepInterests({ interests }) {
 function StepStrengths({ personality }) {
   const sorted = DIMENSIONS.map(d => ({ ...d, score: personality[d.id] })).sort((a, b) => b.score - a.score);
   const strongest = sorted.slice(0, 3);
+  const strengthsPhoto = 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=70';
   return (
-    <StepFullBleed bg="#E5532A" dark>
+    <StepFullBleed bg="#E5532A" photo={strengthsPhoto} photoOpacity={0.62} dark>
       <div className="label mb-4" style={{color: 'rgba(255,255,255,0.75)'}}>tvoj stil rada</div>
       <h1 className="font-medium mb-12 leading-[1.02]" style={{
         fontSize: 'clamp(40px, 7.5vw, 84px)',
@@ -3295,7 +3301,7 @@ function StepMatches({ top3, onSelect }) {
   );
 }
 
-function StepDeepDive({ career, personality, interests }) {
+function StepDeepDive({ career, personality, interests, rank = 1 }) {
   const photo = careerPhotoUrl(career.id);
   const e = explainMatch(career, personality, interests);
   const items = [
@@ -3306,7 +3312,7 @@ function StepDeepDive({ career, personality, interests }) {
 
   return (
     <StepFullBleed bg="#0E0E0C" photo={photo} dark>
-      <div className="label mb-3" style={{color: 'rgba(255,255,255,0.7)'}}>tvoja #1 preporuka</div>
+      <div className="label mb-3" style={{color: 'rgba(255,255,255,0.7)'}}>tvoja #{rank} preporuka</div>
       <h1 className="font-display italic mb-5 leading-[0.9]" style={{
         fontSize: 'clamp(56px, 11vw, 124px)',
         color: 'white',
@@ -3349,8 +3355,9 @@ function StepDeepDive({ career, personality, interests }) {
 
 function StepSalary({ career }) {
   const s = career.salary;
+  const salaryPhoto = 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=70';
   return (
-    <StepFullBleed bg="#15803D" dark>
+    <StepFullBleed bg="#15803D" photo={salaryPhoto} photoOpacity={0.55} dark>
       <div className="label mb-6" style={{color: 'rgba(255,255,255,0.7)'}}>plata · mesečno neto · u Srbiji</div>
 
       <div className="mb-10" style={{animation: 'jFadeUp 0.6s ease-out both'}}>
@@ -3404,8 +3411,9 @@ function StepSalary({ career }) {
 }
 
 function StepMarket({ career }) {
+  const marketPhoto = 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=70';
   return (
-    <StepFullBleed bg="#1E3A8A" dark>
+    <StepFullBleed bg="#1E3A8A" photo={marketPhoto} photoOpacity={0.55} dark>
       <div className="label mb-4" style={{color: 'rgba(255,255,255,0.7)'}}>tržište rada · 2025</div>
       <h1 className="font-medium mb-12 leading-[1.02]" style={{
         color: 'white',
@@ -3708,8 +3716,9 @@ function EmployerLogo({ name }) {
 }
 
 function StepEmployers({ career }) {
+  const employersPhoto = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=70';
   return (
-    <StepFullBleed bg="#F4E8D0">
+    <StepFullBleed bg="#F4E8D0" photo={employersPhoto} photoOpacity={0.62} overlayLight>
       <div className="label mb-4">poslodavci u Srbiji</div>
       <h1 className="font-medium mb-3 leading-[1.02]" style={{
         fontSize: 'clamp(40px, 7vw, 76px)',
@@ -3766,8 +3775,9 @@ function lifestyleIcon(text) {
 }
 
 function StepLifestyle({ career }) {
+  const lifestylePhoto = 'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=70';
   return (
-    <StepFullBleed bg="#FBE9DF">
+    <StepFullBleed bg="#FBE9DF" photo={lifestylePhoto} photoOpacity={0.62} overlayLight>
       <div className="label mb-4">lifestyle · život uz ovaj posao</div>
       <h1 className="font-medium mb-3 leading-[1.02]" style={{
         fontSize: 'clamp(40px, 7vw, 76px)',
@@ -3949,7 +3959,9 @@ function ResultsJourney({ personality, interests, onOpenDashboard }) {
     { id: 'interests', el: <StepInterests interests={interests} /> },
     { id: 'strengths', el: <StepStrengths personality={personality} /> },
     { id: 'matches', el: <StepMatches top3={top3} onSelect={(id) => { setFocusCareerId(id); setStep(5); }} /> },
-    { id: 'deepdive', el: <StepDeepDive career={focusCareer} personality={personality} interests={interests} /> },
+    { id: 'deepdive', el: <StepDeepDive career={top3[0]} personality={personality} interests={interests} rank={1} /> },
+    { id: 'deepdive2', el: <StepDeepDive career={top3[1]} personality={personality} interests={interests} rank={2} /> },
+    { id: 'deepdive3', el: <StepDeepDive career={top3[2]} personality={personality} interests={interests} rank={3} /> },
     { id: 'salary', el: <StepSalary career={focusCareer} /> },
     { id: 'market', el: <StepMarket career={focusCareer} /> },
     { id: 'locations', el: <StepLocations career={focusCareer} /> },
